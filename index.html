@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>雪</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    #fps {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #FFF;
+        font-size: 20px;
+    }
+</style>
+<body>
+<p id="fps"></p>
+<canvas id="cav" style="background-color: black"></canvas>
+</body>
+<script>
+    //绘制雪花
+    const cvs = document.querySelector('#cav')
+    const ctx = cvs.getContext('2d')
+    const {clientWidth: width, clientHeight: height} = document.documentElement
+    cvs.width = width
+    cvs.height = height
+    ctx.fillStyle = "#FFF"
+    const bgColor = Array.from(new Array(100)).map(v => {
+        return {
+            x: Math.random() * width,
+            y: Math.random() * height,
+            step: Math.random() * 2.5 + 0.5
+        }
+    })
+    const render = () => {
+        ctx.clearRect(0, 0, width, height)
+        ctx.beginPath()
+        bgColor.forEach(v => {
+            v.y = v.y > height ? 0 : (v.y + v.step)
+            ctx.rect(v.x, v.y, 3, 3)
+        })
+        ctx.fill()
+        requestAnimationFrame(render)
+    }
+    render()
+
+    //监听FPS
+    var lastTime = performance.now()
+    var frame = 0
+    var lastFameTime = performance.now()
+    var fp = document.querySelector("#fps")
+    var loop = function (time) {
+        var now = performance.now()
+        var fs = now - lastFameTime
+        lastFameTime = now
+        var fps = Math.round(1000 / fs)
+        fp.innerHTML = "当前FPS: " + fps
+        frame++
+        if (now > 1000 + lastTime) {
+            var fps = Math.round((frame * 1000) / (now - lastTime))
+            fp.innerHTML = "当前FPS: " + fps
+            frame = 0
+            lastTime = now
+        }
+        window.requestAnimationFrame(loop)
+    }
+    loop()
+</script>
+</html>
