@@ -18,12 +18,28 @@
         color: #FFF;
         font-size: 20px;
     }
+
+    #time {
+        position: absolute;
+        top: 40px;
+        left: 10px;
+        color: #FFF;
+        font-size: 20px;
+    }
 </style>
 <body>
+<p id="time"></p>
 <p id="fps"></p>
 <canvas id="cav" style="background-color: black"></canvas>
 </body>
+<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
 <script>
+    const time = document.querySelector("#time")
+    time.innerHTML = dayjs().format('HH:mm dddd / A')
+    setInterval(() => {
+        time.innerHTML = dayjs().format('HH:mm dddd / A')
+    }, 1000)
+
     //绘制雪花
     const cvs = document.querySelector('#cav')
     const ctx = cvs.getContext('2d')
@@ -31,7 +47,7 @@
     cvs.width = width
     cvs.height = height
     ctx.fillStyle = "#FFF"
-    const bgColor = Array.from(new Array(100)).map(v => {
+    const bgColor = Array.from(new Array(400)).map(v => {
         return {
             x: Math.random() * width,
             y: Math.random() * height,
@@ -54,7 +70,7 @@
     var lastTime = performance.now()
     var frame = 0
     var lastFameTime = performance.now()
-    var fp = document.querySelector("#fps")
+    const fp = document.querySelector("#fps")
     var loop = function (time) {
         var now = performance.now()
         var fs = now - lastFameTime
